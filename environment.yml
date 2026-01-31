@@ -1,0 +1,13 @@
+name: micro_frontend_env
+channels:
+  - conda-forge
+dependencies:
+   - python=3.14
+   - nodeenv
+   - flask
+   - requests
+   - jsonify
+   - sqlalchemy
+   - pytest
+   - loguru
+   - black
