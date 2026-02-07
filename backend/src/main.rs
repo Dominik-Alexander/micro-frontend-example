@@ -1,19 +1,17 @@
-use std::error::Error;
-use std::net::SocketAddr;
-
-use axum::routing::get;
-use axum::Router;
-
-async fn test() -> &'static str {
-    "Hallo, Dominik!"
-}
+use mini_redis::{client, Result};
 
 #[tokio::main]
-async fn main() -> Result<(), Box<dyn Error>> {
-    let app = Router::new().route("/api/greeting", get(test));
-    let addr = SocketAddr::from(([127, 0, 0, 1], 8080));
-    println!("Listening on: {}", addr);
-    let listener = tokio::net::TcpListener::bind(addr).await?;
-    axum::serve(listener, app).await?;
+async fn main() -> Result<()> {
+    // Open a connection to the mini-redis address.
+    let mut client = client::connect("127.0.0.1:6379").await?;
+
+    // Set the key "hello" with value "world"
+    client.set("hello", "world".into()).await?;
+
+    // Get key "hello"
+    let result = client.get("hello").await?;
+
+    println!("got value from the server; result={:?}", result);
+
     Ok(())
 }
